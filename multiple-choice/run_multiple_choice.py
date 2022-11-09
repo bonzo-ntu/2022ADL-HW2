@@ -317,13 +317,21 @@ def main():
             extension = data_args.test_file.split(".")[-1]
         # <-- add by bonzo
         # extension = data_args.train_file.split(".")[-1]
-        raw_datasets = load_dataset(
-            extension,
-            field="data",
-            data_files=data_files,
-            cache_dir=model_args.cache_dir,
-            use_auth_token=True if model_args.use_auth_token else None,
-        )
+        if data_args.train_file is not None:
+            raw_datasets = load_dataset(
+                extension,
+                data_files=data_files,
+                cache_dir=model_args.cache_dir,
+                use_auth_token=True if model_args.use_auth_token else None,
+            )
+        else:
+            raw_datasets = load_dataset(
+                extension,
+                field="data",
+                data_files=data_files,
+                cache_dir=model_args.cache_dir,
+                use_auth_token=True if model_args.use_auth_token else None,
+            )
     else:
         # Downloading and loading the swag dataset from the hub.
         raw_datasets = load_dataset(
