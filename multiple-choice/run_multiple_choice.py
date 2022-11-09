@@ -319,6 +319,7 @@ def main():
         # extension = data_args.train_file.split(".")[-1]
         raw_datasets = load_dataset(
             extension,
+            field="data",
             data_files=data_files,
             cache_dir=model_args.cache_dir,
             use_auth_token=True if model_args.use_auth_token else None,
