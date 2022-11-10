@@ -27,7 +27,7 @@ from typing import Optional
 import datasets
 from datasets import load_dataset
 
-import evaluate
+# import evaluate
 import transformers
 from trainer_qa import QuestionAnsweringTrainer
 from transformers import (
@@ -310,13 +310,24 @@ def main():
         if data_args.test_file is not None:
             data_files["test"] = data_args.test_file
             extension = data_args.test_file.split(".")[-1]
-        raw_datasets = load_dataset(
-            extension,
-            data_files=data_files,
-            field="data",
-            cache_dir=model_args.cache_dir,
-            use_auth_token=True if model_args.use_auth_token else None,
-        )
+
+        if training_args.do_train:
+            raw_datasets = load_dataset(
+                extension,
+                data_files=data_files,
+                cache_dir=model_args.cache_dir,
+                use_auth_token=True if model_args.use_auth_token else None,
+            )
+        else:
+            raw_datasets = load_dataset(
+                extension,
+                # --> del by bonzo
+                field="data",
+                # <-- del by bonzo
+                data_files=data_files,
+                cache_dir=model_args.cache_dir,
+                use_auth_token=True if model_args.use_auth_token else None,
+            )
 
     # --> add by bonzo
     with open(data_args.context_file, "r") as f:
@@ -375,7 +386,7 @@ def main():
     # answer_column_name = "answers" if "answers" in column_names else column_names[2]
     question_column_name = "question"
     relevant_column_name = "relevant"
-    answer_column_name = "answers"
+    answer_column_name = "answer"
     # <-- amen by bonzo
 
     # Padding side determines if we do (question|context) or (context|question).
@@ -393,7 +404,7 @@ def main():
         # Some of the questions have lots of whitespace on the left, which is not useful and will make the
         # truncation of the context fail (the tokenized question will take a lots of space). So we remove that
         # left whitespace
-        examples[question_column_name] = [q.lstrip() for q in examples[question_column_name]]
+        # examples[question_column_name] = [q.lstrip() for q in examples[question_column_name]]
 
         # Tokenize our examples with truncation and maybe padding, but keep the overflows using a stride. This results
         # in one example possible giving several features when a context is long, each of those features having a
@@ -402,8 +413,14 @@ def main():
             # --> amen by bonzo
             # examples[question_column_name if pad_on_right else context_column_name],
             # examples[context_column_name if pad_on_right else question_column_name],
-            examples[question_column_name if pad_on_right else relevant_column_name],
-            examples[relevant_column_name if pad_on_right else question_column_name],
+            # examples[question_column_name if pad_on_right else relevant_column_name],
+            # examples[relevant_column_name if pad_on_right else question_column_name],
+            examples[question_column_name]
+            if pad_on_right
+            else [context_json[i] for i in examples[relevant_column_name]],
+            [context_json[i] for i in examples[relevant_column_name]]
+            if pad_on_right
+            else examples[question_column_name],
             # <-- amen by bonzo
             truncation="only_second" if pad_on_right else "only_first",
             max_length=max_seq_length,
@@ -436,13 +453,22 @@ def main():
             sample_index = sample_mapping[i]
             answers = examples[answer_column_name][sample_index]
             # If no answers are given, set the cls_index as answer.
-            if len(answers["answer_start"]) == 0:
+            # --> amen by bonzo
+            # if len(answers["answer_start"]) == 0:
+            # <-- amen by bonzo
+            # if len(answers["start"]) == 0:
+            if answers["start"] is None or answers["start"] < 0:
+                # <-- amen by bonzo
                 tokenized_examples["start_positions"].append(cls_index)
                 tokenized_examples["end_positions"].append(cls_index)
             else:
                 # Start/end character index of the answer in the text.
-                start_char = answers["answer_start"][0]
-                end_char = start_char + len(answers["text"][0])
+                # --> amen by bonzo
+                # start_char = answers["answer_start"][0]
+                # end_char = start_char + len(answers["text"][0])
+                start_char = answers["start"]
+                end_char = start_char + len(answers["text"])
+                # <-- amen by bonzo
 
                 # Start token index of the current span in the text.
                 token_start_index = 0

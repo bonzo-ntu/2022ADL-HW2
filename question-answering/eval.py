@@ -46,6 +46,8 @@ def collect_answers(data):
 
 class Tokenizer:
     def __init__(self):
+        # do this before load
+        # !python -m spacy download zh_core_web_sm
         self.nlp = spacy.load("zh_core_web_md", disable=["ner", "parser", "tagger"])
 
     def __call__(self, text, remove_punc=False):
