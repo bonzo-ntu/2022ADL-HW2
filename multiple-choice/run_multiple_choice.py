@@ -523,9 +523,6 @@ def main():
         if data_args.max_test_samples is not None:
             test_dataset = test_dataset.select(range(data_args.max_test_samples))
         with training_args.main_process_first(desc="test dataset map pre-processing"):
-            print("-" * 30)
-            print(test_dataset.to_csv("bad.csv"))
-            print("-" * 30)
             test_dataset = test_dataset.map(
                 # --> del by bonzo
                 # preprocess_function,
@@ -611,19 +608,19 @@ def main():
         json.dump(output_json, open(data_args.output_file, "w", encoding="utf-8"), indent=2, ensure_ascii=False)
     # <-- add by bonzo
 
-    kwargs = dict(
-        finetuned_from=model_args.model_name_or_path,
-        tasks="multiple-choice",
-        dataset_tags="swag",
-        dataset_args="regular",
-        dataset="SWAG",
-        language="en",
-    )
+    # kwargs = dict(
+    #     finetuned_from=model_args.model_name_or_path,
+    #     tasks="multiple-choice",
+    #     dataset_tags="swag",
+    #     dataset_args="regular",
+    #     dataset="SWAG",
+    #     language="en",
+    # )
 
-    if training_args.push_to_hub:
-        trainer.push_to_hub(**kwargs)
-    else:
-        trainer.create_model_card(**kwargs)
+    # if training_args.push_to_hub:
+    #     trainer.push_to_hub(**kwargs)
+    # else:
+    #     trainer.create_model_card(**kwargs)
 
 
 def _mp_fn(index):
