@@ -1,6 +1,6 @@
-python convert.py -b -i $2 -o ./temp/test.json
+python3.9 convert.py -b -i $2 -o ./temp/test.json
 
-python multiple-choice/run_multiple_choice.py \
+python3.9 multiple-choice/run_multiple_choice.py \
   --model_name_or_path ./roberta-wwm-ext/multiple-choice/ \
   --cache_dir ./cache/ \
   --output_dir ./roberta-wwm-ext/multiple-choice/ \
@@ -12,7 +12,7 @@ python multiple-choice/run_multiple_choice.py \
   --max_seq_length 512 \
   --per_device_eval_batch_size 4 \
 
-python question-answering/run_qa.py \
+python3.9 question-answering/run_qa.py \
   --model_name_or_path ./roberta-wwm-ext/qa/ \
   --cache_dir ./cache/ \
   --output_dir ./roberta-wwm-ext/qa/ \
@@ -25,5 +25,5 @@ python question-answering/run_qa.py \
   --per_device_eval_batch_size 4 \
 
 rm ./selection_pred.json
-python convert.py -a -i ./roberta-wwm-ext/qa/test_predictions.json -o $3
+python3.9 convert.py -a -i ./roberta-wwm-ext/qa/test_predictions.json -o $3
 rm ./roberta-wwm-ext/qa/test_predictions.json 

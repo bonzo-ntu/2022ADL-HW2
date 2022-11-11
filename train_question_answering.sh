@@ -16,10 +16,10 @@
 #   --num_train_epochs 3 \
 #   --warmup_ratio 0.1 \
 
-python question-answering/run_qa.py \
+python3.9 question-answering/run_qa.py \
   --do_train \
   --do_eval \
-  --model_name_or_path bert-base-chinese  \
+  --model_name_or_path hfl/chinese-roberta-wwm-ext  \
   --output_dir ./question-answering \
   --overwrite_output_dir \
   --train_file ./data/train.json \
