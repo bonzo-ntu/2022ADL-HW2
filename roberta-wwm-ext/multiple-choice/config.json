@@ -26,7 +26,7 @@
   "pooler_size_per_head": 128,
   "pooler_type": "first_token_transform",
   "position_embedding_type": "absolute",
-  "transformers_version": "4.5.0",
+  "transformers_version": "4.25.0",
   "type_vocab_size": 2,
   "use_cache": true,
   "vocab_size": 21128
