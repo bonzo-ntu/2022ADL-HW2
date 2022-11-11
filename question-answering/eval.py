@@ -6,7 +6,7 @@ import os
 from pathlib import Path
 from pprint import pprint
 
-import spacy
+
 from tqdm import tqdm
 
 
@@ -46,6 +46,8 @@ def collect_answers(data):
 
 class Tokenizer:
     def __init__(self):
+        import spacy
+
         # do this before load
         # !python -m spacy download zh_core_web_sm
         self.nlp = spacy.load("zh_core_web_md", disable=["ner", "parser", "tagger"])
