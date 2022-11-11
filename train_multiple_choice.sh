@@ -1,6 +1,6 @@
 #! /bin/bash
 # ./bert/multiple-choice ./roberta-wwm-ext/multiple_choice roberta-base bert-base-cased hfl/chinese-roberta-wwm-ext
-python multiple-choice/run_multiple_choice.py \
+python3.9 multiple-choice/run_multiple_choice.py \
   --do_train \
   --do_eval \
   --model_name_or_path hfl/chinese-roberta-wwm-ext \

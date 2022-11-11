@@ -1,3 +1,5 @@
+#!/bin/bash
+# bash ./run.sh ./data/context.json ./data/test.json pred.csv
 python3.9 convert.py -b -i $2 -o ./temp/test.json
 
 python3.9 multiple-choice/run_multiple_choice.py \

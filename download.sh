@@ -1,4 +1,4 @@
-python download_pretrain_model.py \
+python3.9 download_pretrain_model.py \
     --model_name_or_path hfl/chinese-roberta-wwm-ext \
     --cache_dir ./cache/ \
 
